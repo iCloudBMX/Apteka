@@ -1,4 +1,7 @@
-﻿using Apteka.API.IRepository;
+﻿using Apteka.API.Dtos;
+using Apteka.API.IRepository;
+using Apteka.API.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,22 +16,60 @@ namespace Apteka.API.Controllers
     public class DoriController : ControllerBase
     {
         private readonly IDoriRepo _repository;
+        private readonly IMapper _mapper;
 
-        public DoriController(IDoriRepo repository)
+        public DoriController(IDoriRepo repository, IMapper mapper)
         {
             _repository = repository;
+
+            _mapper = mapper;
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDorilar()
         {
-            return Ok(await _repository.GetAllAsync());
+            var dorilar = await _repository.GetAllAsync();
+
+
+
+            return Ok(_mapper.Map<IEnumerable<DoriDto>>(dorilar));
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDori(Guid id)
         {
-            return Ok(await _repository.GetByIdAsync(id));
+            var dori = await _repository.GetByIdAsync(id);
+
+            return Ok(_mapper.Map<DoriDto>(dori));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+
+        public async Task<IActionResult> CreateDori([FromBody]DoriForCreationDto doriDto)
+        {
+            var doriModel = _mapper.Map<Dori>(doriDto);
+
+            var dori = await _repository.CreateAsync(doriModel);
+
+            var returnData = _mapper.Map<DoriDto>(dori);
+
+            return Created("", returnData);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpdateDori([FromBody] DoriForCreationDto doriDto, Guid id)
+        {
+            var doriModel = await _repository.GetByIdAsync(id);
+
+            _mapper.Map(doriDto, doriModel);
+
+            await _repository.UpdateAsync(doriModel);
+
+            return NoContent();
         }
     }
 }

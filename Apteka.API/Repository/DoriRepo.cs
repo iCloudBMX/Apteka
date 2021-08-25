@@ -18,8 +18,22 @@ namespace Apteka.API.Repository
             _context = context;
         }
 
+        public async Task<Dori> CreateAsync(Dori dori)
+        {
+            await _context.AddAsync(dori);
+
+            await _context.SaveChangesAsync();
+
+            return dori;
+        }
+
         public async Task<IEnumerable<Dori>> GetAllAsync() => await _context.Dorilar.ToListAsync();
 
         public async Task<Dori> GetByIdAsync(Guid id) => await _context.Dorilar.FirstOrDefaultAsync(dori => dori.Id == id);
+
+        public async Task UpdateAsync(Dori doriDto)
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

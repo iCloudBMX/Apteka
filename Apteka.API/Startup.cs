@@ -1,3 +1,4 @@
+using Apteka.API.Configures.Mapping;
 using Apteka.API.Contexts;
 using Apteka.API.IRepository;
 using Apteka.API.Repository;
@@ -39,6 +40,8 @@ namespace Apteka.API
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
+
+            services.AddAutoMapper(typeof(MappingConfigure));
 
             services.AddScoped<IDoriRepo, DoriRepo>();
 
