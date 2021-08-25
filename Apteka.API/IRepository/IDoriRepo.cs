@@ -14,6 +14,8 @@ namespace Apteka.API.IRepository
 
         Task<Dori> CreateAsync(Dori dori);
 
-        Task UpdateAsync(Dori doriDto);
+        Task UpdateAsync(Dori dori);
+
+        Task DeleteAsync(Dori dori);
     }
 }

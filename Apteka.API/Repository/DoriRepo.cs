@@ -27,6 +27,13 @@ namespace Apteka.API.Repository
             return dori;
         }
 
+        public async Task DeleteAsync(Dori dori)
+        {
+            _context.Remove(dori);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Dori>> GetAllAsync() => await _context.Dorilar.ToListAsync();
 
         public async Task<Dori> GetByIdAsync(Guid id) => await _context.Dorilar.FirstOrDefaultAsync(dori => dori.Id == id);

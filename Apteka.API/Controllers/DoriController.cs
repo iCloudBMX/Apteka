@@ -42,6 +42,9 @@ namespace Apteka.API.Controllers
         {
             var dori = await _repository.GetByIdAsync(id);
 
+            if (dori is null)
+                return NotFound();
+
             return Ok(_mapper.Map<DoriDto>(dori));
         }
 
@@ -65,9 +68,26 @@ namespace Apteka.API.Controllers
         {
             var doriModel = await _repository.GetByIdAsync(id);
 
+            if (doriModel is null)
+                return NotFound();
+
             _mapper.Map(doriDto, doriModel);
 
             await _repository.UpdateAsync(doriModel);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteDori(Guid id)
+        {
+            var doriModel = await _repository.GetByIdAsync(id);
+
+            if (doriModel is null)
+                return NotFound();
+
+            await _repository.DeleteAsync(doriModel);
 
             return NoContent();
         }
