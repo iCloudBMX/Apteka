@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Marvin.Cache.Headers;
+using AspNetCoreRateLimit;
 
 namespace Apteka.API.Extensions
 {
@@ -49,5 +51,43 @@ namespace Apteka.API.Extensions
             });
         }
 
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection services)
+        {
+            services.AddResponseCaching();
+
+            services.AddHttpCacheHeaders(expirationOpt =>
+            {
+                expirationOpt.MaxAge = 120;
+                expirationOpt.CacheLocation = CacheLocation.Private;
+            },
+            validateOpt =>
+            {
+                validateOpt.MustRevalidate = true;
+            });
+        }
+
+        public static void ConfigureRateLimiting(this IServiceCollection services)
+        {
+            var rateLimitRules = new List<RateLimitRule>
+            {
+                new RateLimitRule
+                {
+                    Endpoint = "*",
+                    Limit = 1,
+                    Period = "5s"
+                }
+            };
+
+            services.Configure<IpRateLimitOptions>(opt =>
+            {
+                opt.GeneralRules = rateLimitRules;
+            });
+
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        }
     }
 }

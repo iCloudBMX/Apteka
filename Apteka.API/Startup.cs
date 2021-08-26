@@ -3,6 +3,7 @@ using Apteka.API.Contexts;
 using Apteka.API.Extensions;
 using Apteka.API.IRepository;
 using Apteka.API.Repository;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,6 +44,12 @@ namespace Apteka.API
                 });
             });
 
+            services.AddMemoryCache();
+            services.AddHttpContextAccessor();
+
+            services.ConfigureRateLimiting();
+            services.ConfigureHttpCacheHeaders();
+
             services.AddAuthentication();
             services.ConfigureIdentity();
             services.ConfigureJwt(Configuration);
@@ -75,6 +82,10 @@ namespace Apteka.API
             app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
+
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
+            app.UseIpRateLimiting();
 
             app.UseRouting();
 
