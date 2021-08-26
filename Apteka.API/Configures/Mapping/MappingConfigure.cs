@@ -14,6 +14,8 @@ namespace Apteka.API.Configures.Mapping
         {
             CreateMap<Dori, DoriDto>().ReverseMap();
             CreateMap<Dori, DoriForCreationDto>().ReverseMap();
+
+            CreateMap<ApiUser, UserDto>().ReverseMap();
         }
     }
 }

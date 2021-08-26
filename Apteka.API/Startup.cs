@@ -1,5 +1,6 @@
 using Apteka.API.Configures.Mapping;
 using Apteka.API.Contexts;
+using Apteka.API.Extensions;
 using Apteka.API.IRepository;
 using Apteka.API.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,16 +43,23 @@ namespace Apteka.API
                 });
             });
 
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJwt(Configuration);
+
             services.AddAutoMapper(typeof(MappingConfigure));
 
             services.AddScoped<IDoriRepo, DoriRepo>();
+            services.AddScoped<IAuthManager, AuthManager>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Apteka.API", Version = "v1" });
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +79,7 @@ namespace Apteka.API
             app.UseRouting();
 
 
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
