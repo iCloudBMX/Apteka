@@ -12,7 +12,7 @@ namespace Apteka.API.IRepository
 
         Task<Dori> GetByIdAsync(Guid id);
 
-        Task<Dori> CreateAsync(Dori dori);
+        Task<Dori> CreateAsync(IList<Guid>ids, Dori dori);
 
         Task UpdateAsync(Dori dori);
 

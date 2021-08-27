@@ -4,14 +4,16 @@ using Apteka.API.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Apteka.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210827060156_ManyToManyRelationships")]
+    partial class ManyToManyRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,7 +123,7 @@ namespace Apteka.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Firmalar");
+                    b.ToTable("DoriFirma");
                 });
 
             modelBuilder.Entity("DoriDoriFirma", b =>
@@ -168,15 +170,15 @@ namespace Apteka.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d96bfafe-6d58-42fa-9c5b-2744f238b621",
-                            ConcurrencyStamp = "b85acc2c-7b80-46f5-93cb-f95680777556",
+                            Id = "f0a756a4-77c9-4a75-9a04-7ceaba0dbd7f",
+                            ConcurrencyStamp = "3e6b0c14-f6fb-4a07-bdce-9ab30dceea79",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "384c3e21-6f53-42fe-a312-5bd816ecdaf5",
-                            ConcurrencyStamp = "604ebcbd-00b3-4c5b-9b6f-e9086f2698c7",
+                            Id = "661cdfdb-f5c9-4df2-b23d-63b120488a14",
+                            ConcurrencyStamp = "30285a90-6a16-4761-8549-21d80096f919",
                             Name = "User",
                             NormalizedName = "USER"
                         });

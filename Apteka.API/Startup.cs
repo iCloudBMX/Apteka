@@ -57,7 +57,9 @@ namespace Apteka.API
             services.AddAutoMapper(typeof(MappingConfigure));
 
             services.AddScoped<IDoriRepo, DoriRepo>();
+            services.AddScoped<IFirmaRepo, FirmaRepo>();
             services.AddScoped<IAuthManager, AuthManager>();
+            services.AddScoped<IValyutaRepo, ValyutaRepo>();
 
             services.AddSwaggerGen(c =>
             {
@@ -75,9 +77,11 @@ namespace Apteka.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Apteka.API v1"));
+                
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Apteka.API v1"));
 
             app.UseHttpsRedirection();
 

@@ -18,8 +18,18 @@ namespace Apteka.API.Repository
             _context = context;
         }
 
-        public async Task<Dori> CreateAsync(Dori dori)
+        public async Task<Dori> CreateAsync(IList<Guid> ids, Dori dori)
         {
+            foreach (var id in ids)
+            {
+                var firma = await _context.Firmalar.FirstOrDefaultAsync(firma => firma.Id == id);
+
+                if(firma is not null)
+                {
+                    dori.Firmalar.Add(firma);
+                }
+            }
+            
             await _context.AddAsync(dori);
 
             await _context.SaveChangesAsync();
@@ -34,7 +44,7 @@ namespace Apteka.API.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Dori>> GetAllAsync() => await _context.Dorilar.ToListAsync();
+        public async Task<IEnumerable<Dori>> GetAllAsync() => await _context.Dorilar.Include(dori => dori.Firmalar).ToListAsync();
 
         public async Task<Dori> GetByIdAsync(Guid id) => await _context.Dorilar.FirstOrDefaultAsync(dori => dori.Id == id);
 

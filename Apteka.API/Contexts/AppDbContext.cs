@@ -16,6 +16,7 @@ namespace Apteka.API.Contexts
         }
 
         public DbSet<Dori> Dorilar { get; set; }
+        public DbSet<DoriFirma> Firmalar { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
